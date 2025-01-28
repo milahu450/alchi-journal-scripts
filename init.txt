@@ -1,0 +1,18 @@
+git clone https://github.com/milahu/alchi-journal
+cd alchi-journal
+
+git checkout master
+
+git branch s
+git filter-repo --path scan.sh --path scan-adf.sh --path move-images.sh --path add-images.sh --path generate-index-files.sh --path scripts/ --refs s --force
+git checkout s
+git branch -m s scripts
+
+git mv scripts/* .
+git commit -m mv
+rmdir scripts
+
+mkdir s
+cd s
+git clone "file://$PWD/../" . --branch scripts
+git branch -m scripts main
