@@ -42,4 +42,4 @@ for file_path in glob.glob('*.jpg') + glob.glob('*.jpeg'):
     print(f"Writing {webp_small}")
 
     # Call ImageMagick's convert command
-    subprocess.run(['convert', file_path] + small_convert_options + [webp_small])
+    subprocess.run(['magick', file_path] + small_convert_options + [webp_small])
