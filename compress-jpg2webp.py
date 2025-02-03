@@ -17,6 +17,8 @@ extra_convert_options = []
 # Shared convert options
 shared_convert_options = [
     *extra_convert_options,
+    # honor jpg rotation
+    '-auto-orient',
     '-set', 'colorspace', 'RGB',
     '+profile', '*',
     '-quality', str(quality),
