@@ -13,7 +13,7 @@ dirs=(
 )
 
 
-find . -mindepth 1 -maxdepth 1 -type f \
+find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type f \
   -regextype posix-extended -regex \
   '\./(IMG_)?[0-9]{4}-?[0-9]{2}-?[0-9]{2}[\._]?[0-9]{2}-?[0-9]{2}.*\.webp' -printf '%P\n' |
 while read webp_path
