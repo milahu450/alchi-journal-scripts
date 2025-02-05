@@ -4,22 +4,36 @@
 # TODO maybe integrate this into scan-adf.sh
 
 
+dirs=(
+  # alchi-journal
+  .
+  # android camera
+  /storage/emulated/0/DCIM/Camera/small/
+  /storage/sdcard0/DCIM/Camera/small/
+)
+
 
 find . -mindepth 1 -maxdepth 1 -type f \
   -regextype posix-extended -regex \
-  '\./[0-9]{4}-?[0-9]{2}-?[0-9]{2}[\._][0-9]{2}-?[0-9]{2}.*\.webp' -printf '%P\n' |
+  '\./(IMG_)?[0-9]{4}-?[0-9]{2}-?[0-9]{2}[\._]?[0-9]{2}-?[0-9]{2}.*\.webp' -printf '%P\n' |
 while read webp_path
 do
 
   year_month=$(echo "$webp_path" |
-    sed -E 's/^([0-9]{4}-?[0-9]{2})-?.*$/\1/')
+    sed -E 's/^((?:IMG_)?[0-9]{4}-?[0-9]{2})-?.*$/\1/')
 
   if [[ "$year_month" == "$webp_path" ]]; then
     echo "error: failed to parse year_month from webp_path: $webp_path"
     exit 1
   fi
 
+  # YYYYmmdd
   if [ ${#year_month} == 6 ]; then
+    year_month=${year_month:0:4}-${year_month:4:2}
+  fi
+
+  # IMG_YYYYmmdd
+  if [ ${#year_month} == 10 ]; then
     year_month=${year_month:0:4}-${year_month:4:2}
   fi
 
@@ -29,9 +43,9 @@ do
 
   base="$(basename "$webp_path")"
 
-  if echo "$base" | grep -q -E '^[0-9]{4}[0-9]{2}[0-9]{2}_[0-9]{2}[0-9]{2}.*\.webp'; then
+  if echo "$base" | grep -q -E '^(?:IMG_)?[0-9]{4}[0-9]{2}[0-9]{2}_[0-9]{2}[0-9]{2}.*\.webp'; then
     base=$(echo "$base" |
-      sed -E 's/^([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})/\1-\2-\3.\4-\5/'
+      sed -E 's/^(?:IMG_)?([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})/\1-\2-\3.\4-\5/'
     )
   fi
 
