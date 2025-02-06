@@ -15,14 +15,18 @@ dirs=(
 
 find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type f \
   -regextype posix-extended -regex \
-  '\./(IMG_)?[0-9]{4}-?[0-9]{2}-?[0-9]{2}[\._]?[0-9]{2}-?[0-9]{2}.*\.webp' -printf '%P\n' |
+  '.*/(IMG_)?[0-9]{4}-?[0-9]{2}-?[0-9]{2}[\._]?[0-9]{2}-?[0-9]{2}.*\.webp' -printf '%P\n' |
 while read webp_path
 do
 
-  year_month=$(echo "$webp_path" |
-    sed -E 's/^((?:IMG_)?[0-9]{4}-?[0-9]{2})-?.*$/\1/')
+  echo "webp_path $webp_path"
 
-  if [[ "$year_month" == "$webp_path" ]]; then
+  base="$(basename "$webp_path")"
+
+  year_month=$(echo "$base" |
+    sed -E 's/^(IMG_)?([0-9]{4}-?[0-9]{2})-?.*$/\2/')
+
+  if [[ "$year_month" == "$base" ]]; then
     echo "error: failed to parse year_month from webp_path: $webp_path"
     exit 1
   fi
@@ -34,18 +38,16 @@ do
 
   # IMG_YYYYmmdd
   if [ ${#year_month} == 10 ]; then
-    year_month=${year_month:0:4}-${year_month:4:2}
+    year_month=${year_month:4:4}-${year_month:8:2}
   fi
 
-  #echo "$year_month $webp_path"
+  echo "$year_month $webp_path"
 
   mkdir -p "img/$year_month"
 
-  base="$(basename "$webp_path")"
-
-  if echo "$base" | grep -q -E '^(?:IMG_)?[0-9]{4}[0-9]{2}[0-9]{2}_[0-9]{2}[0-9]{2}.*\.webp'; then
+  if echo "$base" | grep -q -E '^(IMG_)?[0-9]{4}[0-9]{2}[0-9]{2}_[0-9]{2}[0-9]{2}.*\.webp'; then
     base=$(echo "$base" |
-      sed -E 's/^(?:IMG_)?([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})/\1-\2-\3.\4-\5/'
+      sed -E 's/^(IMG_)?([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})/\2-\3-\4.\5-\6/'
     )
   fi
 
@@ -56,9 +58,14 @@ do
     exit 1
   fi
 
+  # debug: stop after first
+  # break
+
   mv "$webp_path" "$output_path"
 
   # fix: files on sdcard have mode 0777
   chmod 0644 "$output_path"
+
+break
 
 done
