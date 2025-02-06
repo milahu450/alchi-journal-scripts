@@ -20,7 +20,9 @@ find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type f \
 while read webp_path
 do
 
+#  echo
   echo "webp_path $webp_path"
+# continue
 
   base="$(basename "$webp_path")"
 
@@ -61,12 +63,14 @@ do
 
   # debug: stop after first
   # break
+# echo mv "$webp_path" "$output_path"
+# continue
 
   mv "$webp_path" "$output_path"
 
   # fix: files on sdcard have mode 0777
   chmod 0644 "$output_path"
 
-break
+# break
 
 done
