@@ -46,7 +46,7 @@ do
       printf '<h2>%s</h2>\n\n' "$n"
       if [ -e "$md" ]; then
         printf "<blockquote>\n\n"
-        pandoc -f markdown -t html "$md"
+        pandoc -f markdown -t html <"$md"
         printf "\n\n\n</blockquote>\n\n"
       fi
       printf '<img src="../%s">\n\n' "$f"
