@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME font size is too small in tables
+
 cd "$(dirname "$0")"/..
 
 mkdir -p html
