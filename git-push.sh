@@ -4,4 +4,6 @@ set -x
 
 git push github.com
 git push righttoprivacy.onion
-git push darktea.onion
+
+# darktea is broken since 2025-02-08
+# git push darktea.onion
