@@ -46,12 +46,16 @@ do
       printf '<h2>%s</h2>\n\n' "$n"
       if [ -e "$md" ]; then
         printf "<blockquote>\n\n"
-        pandoc -f markdown -t html <"$md"
+        # calling pandoc too often is slow
+        # pandoc -f markdown -t html <"$md"
+        cat "$md"
         printf "\n\n\n</blockquote>\n\n"
       fi
       printf '<img src="../%s">\n\n' "$f"
     done
-  ) >html/$month.html
+  # ) >html/$month.html
+  ) |
+  pandoc -f markdown -t html >html/$month.html
 
 done
 
